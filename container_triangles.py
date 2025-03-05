@@ -41,7 +41,8 @@ def create_triangle_tab(data):
     # Plot with Matplotlib instead
     fig, ax = plt.subplots(figsize=(8, 4))
     for column in df_pivot.columns:
-        series = df_pivot[column]#.dropna()
+        # Drop NaN values before plotting
+        series = df_pivot[column].dropna()
         ax.plot(
             series.index, 
             series, 
@@ -49,17 +50,6 @@ def create_triangle_tab(data):
             marker = 'o', 
             label = column
             )
-        
-    # for column in df_pivot.columns:
-    # column = df_pivot.columns[-1]
-    # series = df_pivot[column].dropna()
-    # ax.plot(
-    #     series.index, 
-    #     series, 
-    #     markersize = 3, 
-    #     marker = 'o', 
-    #     label = column
-    #     )
 
     # Set x-axis to show integer values only
     ax.set_xticks(range(0, int(df_pivot.index.max()) + 1))
@@ -75,7 +65,7 @@ def create_triangle_tab(data):
     st.pyplot(fig)
 
 
-    # alernatively more columns
+    # alternatively more columns
     # col1, col2 = st.columns([2, 3])  # Adjust the ratio for your needs
 
     # with col1:
