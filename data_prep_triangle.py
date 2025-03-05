@@ -1,7 +1,24 @@
 #%% 
-
+import numpy as np
 import pandas as pd
 from ydata_profiling import ProfileReport
+
+def skew_value(value, skew_range=0.1):
+    """
+    Skew the given value by a random percentage within the specified range. 
+    To see something, because its not nice triangle data.
+
+    Parameters:
+    value (float): The original value to be skewed.
+    skew_range (float): The range within which to skew the value, e.g., 0.1 for ±10%.
+
+    Returns:
+    float: The skewed value.
+    """
+    if pd.isna(value):
+        return value  # Do not change NaN values
+    skew_factor = 1 + np.random.uniform(-skew_range, skew_range)
+    return value * skew_factor
 
 # Load data --------------------------------------------------------------------
 
@@ -32,8 +49,12 @@ list_dfs = [
 
 for i, df in enumerate(list_dfs):
     df = df.reset_index()
+    month_columns = [col for col in df.columns if col.startswith('Month')]
+    df[month_columns] = df[month_columns].replace(0, np.nan)
+    df[month_columns] = df[month_columns].cumsum(axis=0)
     df.rename(columns = {'index':'dev'}, inplace=True)
-    df = pd.melt(df, id_vars=['trs', 'dev'], var_name='month', value_name='value').reset_index()
+    df.columns = ['dev'] + list(range(2011, 2021)) + ['trs']
+    df = pd.melt(df, id_vars=['trs', 'dev'], var_name='year', value_name='value').reset_index()  
     list_dfs[i] = df
 
 # creates dfs of triangles by lob
@@ -50,8 +71,10 @@ dt_triangle_all = pd.concat([
     triangle_property]).drop(columns=['index'])
 
 
-
+# Apply the skew_value function to the 'value' column
+dt_triangle_all['value'] = dt_triangle_all['value'].apply(skew_value, skew_range=0.2)
 
 # profile = ProfileReport(dt_customer_raw, title="Pandas Profiling Report")
 # profile
 # %%
+
