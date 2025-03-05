@@ -6,50 +6,60 @@ import numpy as np
 def create_triangle_tab(data):
     container_triangle = st.container()
 
-    st.write("TRIANGLE TAB")
+    # Arrange the toggle and LOB selector side by side
+    col1, col2 = st.columns([1, 3]) 
+    with col1:
+        # Toggle for Incurred vs Paid
+        view_label = st.radio(
+            "Select View",
+            options=['Incurred', 'Paid'],
+            index=0
+        )
+        if view_label == 'Incurred':
+            view_value = 'inc'
+        else:
+            view_value = 'paid'
 
-    # Toggle for Incurred vs Paid
-    view_label = st.radio(
-        "Select View",
-        options=['Incurred', 'Paid'],
-        index=0
-    )
+    with col2:
+        # LoB selector
+        unique_lobs = data['lob'].unique()
+        selected_lobs = st.multiselect(
+            "Select LOB", 
+            options = unique_lobs, 
+            default = unique_lobs  
+        )
+    
+    col_s1, col_space, col_s2 = st.columns([4, 1, 4]) 
 
-    # LoB selector
-    unique_lobs = data['lob'].unique()
-    selected_lobs = st.multiselect(
-        "Select LOB", 
-        options = unique_lobs, 
-        default = unique_lobs  
-    )
+    with col_s1:  
+        # Slider for selecting a year between 2011 and 2020
+        selected_year_range = st.slider(
+            'Select years',
+            min_value = data['year'].min(),
+            max_value = data['year'].max(),
+            value=(data['year'].min(), data['year'].max())  # Default value
+        )
 
-    if view_label == 'Incurred':
-        view_value = 'inc'
-    else:
-        view_value = 'paid'
-
-    # Slider for selecting a year between 2011 and 2020
-    selected_year_range = st.slider(
-        'Select Year',
-        min_value = data['year'].min(),
-        max_value = data['year'].max(),
-        value=(data['year'].min(), data['year'].max())  # Default value
-    )
-
+    with col_s2:  
+        # Slider for selecting a year between 2011 and 2020
+        selected_dev_range = st.slider(
+            'Select number of development periods',
+            min_value = data['dev'].min(),
+            max_value = data['dev'].max(),
+            value=(data['dev'].min(), data['dev'].max())  # Default value
+        )
 
 
 
     df_filtered = data[(data['trs'] == view_value) & 
                        (data['lob'].isin(selected_lobs)) &
                        (data['year'] >= selected_year_range[0]) &
-                       (data['year'] <= selected_year_range[1])
+                       (data['year'] <= selected_year_range[1]) &
+                       (data['dev'] >= selected_dev_range[0]) &
+                       (data['dev'] <= selected_dev_range[1])
                        ]
     
     df_pivot = df_filtered.pivot_table(index='dev', columns='year', values='value')
-
-    # Plot the chart using Streamlit
-    # st.line_chart(df_pivot)
-
 
     # Plot with Matplotlib instead
     fig, ax = plt.subplots(figsize=(8, 4))
@@ -76,13 +86,3 @@ def create_triangle_tab(data):
 
     # Display the plot using Streamlit
     st.pyplot(fig)
-
-
-    # alternatively more columns
-    # col1, col2 = st.columns([2, 3])  # Adjust the ratio for your needs
-
-    # with col1:
-    #     st.pyplot(fig)  # Display the plot in the first column
-
-    # with col2:
-    #     st.write("Additional content can go here.")  # Additional content in the second column
