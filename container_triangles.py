@@ -28,8 +28,21 @@ def create_triangle_tab(data):
     else:
         view_value = 'paid'
 
+    # Slider for selecting a year between 2011 and 2020
+    selected_year_range = st.slider(
+        'Select Year',
+        min_value = data['year'].min(),
+        max_value = data['year'].max(),
+        value=(data['year'].min(), data['year'].max())  # Default value
+    )
+
+
+
+
     df_filtered = data[(data['trs'] == view_value) & 
-                       (data['lob'].isin(selected_lobs))
+                       (data['lob'].isin(selected_lobs)) &
+                       (data['year'] >= selected_year_range[0]) &
+                       (data['year'] <= selected_year_range[1])
                        ]
     
     df_pivot = df_filtered.pivot_table(index='dev', columns='year', values='value')
