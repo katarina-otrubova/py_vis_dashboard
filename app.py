@@ -5,7 +5,7 @@ from ydata_profiling import ProfileReport
 
 
 from data_prep_triangle import dt_triangle_all
-from data_prep_claim import dt_customer
+from data_prep_claim import dt_claims
 from container_triangles import create_triangle_tab
 from container_claims import create_cla_tab
 
@@ -26,15 +26,15 @@ st.title("Claim Dashboard")
 # st.dataframe(dt_customer)
 
 
-cla_tab, triangle_tab = st.tabs(["Claim Data", "Claim Development"])
+cla_tab, triangle_tab = st.tabs(["Claim Analysis", "Triangle Development"])
 
 with cla_tab:
-    create_cla_tab(dt_triangle_all)
+    create_cla_tab(dt_claims)
 
 with triangle_tab:
     create_triangle_tab(dt_triangle_all)
 
-st.write("this should be under containers")
+st.write("placehodler - content under both containers")
 
 # df_paid = triangle_all[(triangle_all['trs'] == 'paid') & 
 #                        (triangle_all['lob'] == 'Motor') #& 
