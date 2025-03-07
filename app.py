@@ -3,30 +3,58 @@ import streamlit as st
 import pandas as pd
 from ydata_profiling import ProfileReport
 
+st.set_page_config(page_title="Training Streamlit Dashboard", layout="wide")
 
 from data_prep_triangle import dt_triangle_all
-from data_prep_claim import dt_claims
+from data_prep_claim import customer_data_prep
 from container_triangles import create_triangle_tab
 from container_claims import create_cla_tab
+from container_motor import create_motor_tab
 
 # global settings
 pd.set_option('display.max_rows', None)
 pd.set_option('display.max_columns', None)
 
+# STYLING
+
+st.markdown(
+    """
+    <style>
+    .block-container {
+        max-width: 72%;
+        margin-left: 3%;
+        margin-right: auto;
+        
+    }
+    body {
+        background-color: #C9C6B6; 
+        background-color: #00FF00;
+    }
+
+        .stSlider > div > div > div > input[type=range] {
+        accent-color: blue;
+    }
+    </style>
+    """,
+    unsafe_allow_html=True
+)
 
 
+# DATA
 
-#%%
+dt_claims, dt_motor_loc = customer_data_prep()
+
 ### STREAMLIT
 
 
-st.set_page_config(page_title="Training Streamlit Dashboard")
-# st.set_page_config(page_title="Training Streamlit Dashboard", layout="wide")
+
 st.title("Claim Dashboard")
-# st.dataframe(dt_customer)
 
-
-cla_tab, triangle_tab = st.tabs(["Claim Analysis", "Triangle Development"])
+cla_tab, triangle_tab, motor_tab = st.tabs([
+    "Claim Analysis", 
+    "Triangle Development",
+    "US Motor Claims"
+    ])
 
 with cla_tab:
     create_cla_tab(dt_claims)
@@ -34,18 +62,6 @@ with cla_tab:
 with triangle_tab:
     create_triangle_tab(dt_triangle_all)
 
-st.write("placehodler - content under both containers")
+with motor_tab:
+    create_motor_tab(dt_motor_loc.head(1000))
 
-# df_paid = triangle_all[(triangle_all['trs'] == 'paid') & 
-#                        (triangle_all['lob'] == 'Motor') #& 
-#                       # (triangle_all['month'] == 'Month1')
-#                        ]
-
-# Pivot the DataFrame to prepare it for plotting
-# df_pivot = df_paid.pivot_table(index='dev', columns='month', values='value')
-
-# Plot the chart using Streamlit
-# st.line_chart(df_pivot)
-# st.line_chart(paid_cas, x="Date", y="Price")
-
-# %%
