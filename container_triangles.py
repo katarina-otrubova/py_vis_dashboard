@@ -85,4 +85,20 @@ def create_triangle_tab(data):
 
 
     # Display the plot using Streamlit
-    st.pyplot(fig)
+    st.pyplot(fig, use_container_width=False)
+
+    # Custom CSS to limit the width of the plot
+    st.markdown(
+        """
+        <style>
+        .element-container {
+            width: 70% !important;
+            margin: 0%;
+        }
+        .element-container canvas {
+            width: 100% !important;
+        }
+        </style>
+        """,
+        unsafe_allow_html=True
+    )
