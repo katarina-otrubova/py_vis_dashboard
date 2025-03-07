@@ -56,7 +56,7 @@ def create_cla_tab(data):
             color=alt.Color(f'{col_color}:N', scale=alt.Scale(scheme='redyellowblue')),
             tooltip=[col_group_by, col_color, 'Claims']
         ).properties(
-            width=600,
+            width=500,
             height=400
         ).interactive()
 
@@ -74,7 +74,7 @@ def create_cla_tab(data):
             color=alt.Color(f'{col_color}:N', scale=alt.Scale(scheme='redyellowblue')),
             tooltip=[col_group_by, col_color, 'ClaimNb']
         ).properties(
-            width=600,
+            width=500,
             height=400
         ).interactive()
 
@@ -109,7 +109,7 @@ def create_cla_tab(data):
             x=f'{col_group_by}:N',
             y='Loss Ratio %:Q',
         ).properties(
-            width=600,
+            width=500,
             height=400
         ).interactive()
 
@@ -136,7 +136,7 @@ def create_cla_tab(data):
             x=f'{col_group_by}:N',
             y='Combined Ratio %:Q',
         ).properties(
-            width=600,
+            width=500,
             height=400
         ).interactive()
 
