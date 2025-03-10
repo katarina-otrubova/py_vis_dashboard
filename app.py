@@ -26,10 +26,6 @@ st.markdown(
         margin-right: auto;
         
     }
-    body {
-        background-color: #C9C6B6; 
-        background-color: #00FF00;
-    }
 
         .stSlider > div > div > div > input[type=range] {
         accent-color: blue;
